@@ -1,0 +1,21 @@
+version: '3'
+services:
+  modernclouddev:
+    image: modernclouddev:latest
+    container_name: modernclouddev
+
+    user: vscode
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ..:/workspace:cached
+    - /mnt/c/users/chwieder/.azure:/home/vscode/.azure
+    - /mnt/c/users/chwieder/.kube:/home/vscode/.kube
+    - /mnt/c/users/chwieder/.git:/home/vscode/.config/git
+    
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity 
