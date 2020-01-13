@@ -12,10 +12,10 @@ services:
 
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    - ..:/workspace:cached
-    - /mnt/c/users/chwieder/.azure:/home/vscode/.azure
-    - /mnt/c/users/chwieder/.kube:/home/vscode/.kube
-    - /mnt/c/users/chwieder/.git:/home/vscode/.config/git
+    - ..:/workspace
+    - /c/users/chwieder/.azure:/home/vscode/.azure
+    - /c/users/chwieder/.git:/home/vscode/.config/git
+    - /c/users/chwieder/.kube:/home/vscode/.kube
     
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity 

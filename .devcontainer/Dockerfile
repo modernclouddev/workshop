@@ -16,6 +16,9 @@ ARG USER_GID=$USER_UID
 # The version of Node JS to install
 ARG NODE_VERSION=12.x
 
+# Docker Compose version
+ARG COMPOSE_VERSION=1.24.0
+
 # Latest version of Terraform may be found at https://www.terraform.io/downloads.html
 ARG TERRAFORM_VERSION=0.12.18
 
@@ -54,7 +57,7 @@ RUN apt-get update \
     && apt-get install -y docker-ce-cli
 
 # Install Docker Compose
-RUN curl -sSL "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+RUN curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
     && chmod +x /usr/local/bin/docker-compose
 
 # Node JS
@@ -95,8 +98,13 @@ RUN curl -sSL -o /tmp/downloads/helm.tar.gz https://get.helm.sh/helm-v${HELM_VER
 RUN curl -sL https://raw.githubusercontent.com/dapr/cli/master/install/install.sh | /bin/bash
 
 # Install GoLang and Powerline for the bash shell
-RUN apt install -y golang-go \
-    && go get -u github.com/justjanne/powerline-go
+# RUN apt install -y golang-go \
+#     && go get -u github.com/justjanne/powerline-go
+
+# Install GoLang and Powerline for the bash shell
+# COPY .bashrc /home/$USERNAME/.bashrc.append
+# RUN cat /home/$USERNAME/.bashrc.append >> /home/$USERNAME/.bashrc \
+#     && rm /home/$USERNAME/.bashrc.append
 
 # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -104,16 +112,15 @@ RUN groupadd --gid $USER_GID $USERNAME \
     # [Optional] Add sudo support for the non-root user
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-    && chmod 0440 /etc/sudoers.d/$USERNAME 
+    && chmod 0440 /etc/sudoers.d/$USERNAME \
+    && groupadd docker \
+    && usermod -aG docker $USERNAME
 
 # Clean up
 RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/downloads
-
-# Copy in the bash settings file
-COPY .bashrc /root/.bashrc
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
