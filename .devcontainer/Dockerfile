@@ -3,14 +3,6 @@ FROM debian:10
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
-# property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
-# will be updated to match your local UID/GID (when using the dockerFile property).
-# See https://aka.ms/vscode-remote/containers/non-root-user for details.
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-
 # Utility versions
 
 # The version of Node JS to install
@@ -98,23 +90,11 @@ RUN curl -sSL -o /tmp/downloads/helm.tar.gz https://get.helm.sh/helm-v${HELM_VER
 RUN curl -sL https://raw.githubusercontent.com/dapr/cli/master/install/install.sh | /bin/bash
 
 # Install GoLang and Powerline for the bash shell
-# RUN apt install -y golang-go \
-#     && go get -u github.com/justjanne/powerline-go
+RUN apt install -y golang-go \
+    && go get -u github.com/justjanne/powerline-go
 
-# Install GoLang and Powerline for the bash shell
-# COPY .bashrc /home/$USERNAME/.bashrc.append
-# RUN cat /home/$USERNAME/.bashrc.append >> /home/$USERNAME/.bashrc \
-#     && rm /home/$USERNAME/.bashrc.append
-
-# Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    # [Optional] Add sudo support for the non-root user
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-    && chmod 0440 /etc/sudoers.d/$USERNAME \
-    && groupadd docker \
-    && usermod -aG docker $USERNAME
+# Copy in the bash settings file
+COPY .bashrc /root/.bashrc
 
 # Clean up
 RUN apt-get autoremove -y \
