@@ -48,9 +48,3 @@ resource "azurerm_kubernetes_cluster" "aks" {
     azuread_application.aks
   ]
 }
-
-resource "kubernetes_namespace" "namespace" {
-  metadata {
-    name = "hackfest"
-  }
-}

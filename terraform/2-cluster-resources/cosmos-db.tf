@@ -17,13 +17,13 @@ resource "azurerm_cosmosdb_account" "cosmos" {
 }
 
 output "mongodb_endpoint" {
-  value = "${azurerm_cosmosdb_account.cosmos.endpoint}"
+  value = azurerm_cosmosdb_account.cosmos.endpoint
 }
 
 output "mongodb_user" {
-  value = "${azurerm_cosmosdb_account.cosmos.name}"
+  value = azurerm_cosmosdb_account.cosmos.name
 }
 
 output "mongodb_password" {
-  value = "${azurerm_cosmosdb_account.cosmos.primary_master_key}"
+  value = azurerm_cosmosdb_account.cosmos.primary_master_key
 }
