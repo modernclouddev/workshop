@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-api
+  labels:
+    app: data-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-api
+  template:
+    metadata:
+      labels:
+        app: data-api
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/id: "data-api"
+        dapr.io/port: "3009"
+    spec:
+      containers:
+      - image: cdwmodernclouddev20200111acr.azurecr.io/hackfest/data-api:1.0
+        imagePullPolicy: Always
+        name: data-api
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+        env:
+        - name: MONGODB_USER
+          valueFrom:
+            secretKeyRef:
+              name: cosmos-db-secret
+              key: user
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cosmos-db-secret
+              key: pwd
+        - name: APPINSIGHTS_INSTRUMENTATIONKEY
+          valueFrom:
+            secretKeyRef:
+              name: cosmos-db-secret
+              key: appinsights
+        ports:
+        - containerPort: 3009
+          protocol: TCP
+      restartPolicy: Always

@@ -11,4 +11,21 @@ helm install quakes-api ./quakes-api --namespace hackfest --set deploy.acrServer
 helm install weather-api ./weather-api --namespace hackfest --set deploy.acrServer=cdwmodernclouddev20200111acr.azurecr.io
 helm install service-tracker-ui ./service-tracker-ui --namespace hackfest --set deploy.acrServer=cdwmodernclouddev20200111acr.azurecr.io
 
+
+
+kubectl create namespace mcd
+
+kubectl create secret generic cosmos-db-secret -n mcd \
+--from-literal=user=cdw-modernclouddev-20200111-db \
+--from-literal=pwd=MBkxXHgswN5XGmIPNhHw1ipGD0CJAgqVmEMwx2SPL8skEqWIZN3KY2jL8oUCW2V6aq51FdxLhcYDzneiTcBksg== \
+--from-literal=appinsights=InstrumentationKey=48b18e69-0eff-4af0-ae40-141dbb6fc237 
+
+
+kubectl apply -f data-api.yaml -n mcd
+
+kubectl run -i --tty busybox --image=busybox -n mcd --restart=Never -- sh
+
+wget http://localhost:3500/v1.0/invoke/data-api/method/status
+wget http://localhost:3500/v1.0/invoke/data-api/method/status
+
 ```
