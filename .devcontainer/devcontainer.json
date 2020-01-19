@@ -31,6 +31,8 @@
 	"extensions": [
 		"ms-vscode.azurecli",
 		"ms-azuretools.vscode-azureterraform",
-		"mauve.terraform"
+		"mauve.terraform",
+		"ms-vscode.csharp",
+		"visualstudioexptteam.vscodeintellicode"
 	]
 }
