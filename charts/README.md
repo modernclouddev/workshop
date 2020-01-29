@@ -2,8 +2,8 @@
 
 kubectl create secret generic cosmos-db-secret -n hackfest \
 --from-literal=user=cdw-modernclouddev-20200111-db \
---from-literal=pwd=MBkxXHgswN5XGmIPNhHw1ipGD0CJAgqVmEMwx2SPL8skEqWIZN3KY2jL8oUCW2V6aq51FdxLhcYDzneiTcBksg== \
---from-literal=appinsights=InstrumentationKey=48b18e69-0eff-4af0-ae40-141dbb6fc237 
+--from-literal=pwd=MY_COSMOS_DB_KEY \
+--from-literal=appinsights=InstrumentationKey=MY_APP_INSIGHTS_KEY
 
 helm install data-api ./data-api --namespace hackfest --set deploy.acrServer=cdwmodernclouddev20200111acr.azurecr.io
 helm install flights-api ./flights-api --namespace hackfest --set deploy.acrServer=cdwmodernclouddev20200111acr.azurecr.io
